@@ -168,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /***************** USER TABLE ***********************/
     // Adding new USER
-    public void addUser(User user) {
+        public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -249,11 +249,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // return user list
         return userList;
     }
-
-
-
-
-
 
 
     /********************* COMMENTS ***************************/

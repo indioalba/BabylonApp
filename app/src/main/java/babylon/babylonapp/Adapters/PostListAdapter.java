@@ -50,7 +50,7 @@ public class PostListAdapter extends ArrayAdapter<Post>{
         return convertView;
     }
 
-    // class to make smoother the list
+    // class to recycle the elements
     static class HolderView{
         NetworkImageView ivAvatarRow;
         TextView  tvTitle;

@@ -50,12 +50,6 @@ public class UserDAO {
                 myRequestCallback.onError(error);
             }
         });
-
     }
 
-    public static void getAvatarByEmail(Activity activity, int idUser, String tagToCancel,
-                                        final Requests.MyRequestCallback myRequestCallback){
-
-
-    }
 }

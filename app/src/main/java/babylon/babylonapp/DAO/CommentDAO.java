@@ -20,9 +20,6 @@ public class CommentDAO {
     public static void getCommentsByPostId(Activity activity, int postId, String tagToCancel,
                                            final Requests.MyRequestCallback myRequestCallback){
 
-        // building the url to get only the comments of 1 of the post
-        String newUrl = URL_POST + "?postId=" + postId;
-
         // Request to Database
         final DatabaseHelper db = new DatabaseHelper(activity);
         ArrayList<Comment> alComment = db.getAllCommentByPostId(postId);
@@ -33,6 +30,9 @@ public class CommentDAO {
         }
 
         // Request ONLINE posts
+        // building the url to get only the comments of 1 of the post
+        String newUrl = URL_POST + "?postId=" + postId;
+
         Requests.requestArray(activity, newUrl, tagToCancel, Comment.class, new Requests.MyRequestCallback() {
             @Override
             // SUCCESS

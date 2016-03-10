@@ -124,7 +124,6 @@ public class PostDAO {
 
 
                             // get the COMMENTS
-                            //CommentDAO.getCommentsByPostId(activity, postResponse.getId(), tagToCancel, new Requests.MyRequestCallback() {
                              CommentDAO.getCommentsByPostId(activity, postResponse.getId(), tagToCancel, new Requests.MyRequestCallback() {
                                 @Override
                                 public void onResponse(Object objectResponse) {
