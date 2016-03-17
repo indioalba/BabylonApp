@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import babylon.babylonapp.Fragments.PostDescriptionFragment;
 import babylon.babylonapp.Fragments.PostListFragment;
@@ -14,6 +15,7 @@ import babylon.babylonapp.R;
 public class MainActivity extends AppCompatActivity implements PostListFragment.OnPostSelectedInterface {
 
     private String TAG = "MainActivity";
+    private PostDescriptionFragment postDescriptionFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements PostListFragment.
     public void onPostSelected(int postId) {
         Log.i(TAG, "postSelected");
         // Capture the article fragment from the activity layout
-        PostDescriptionFragment postDescriptionFragment = new PostDescriptionFragment();
+        postDescriptionFragment = new PostDescriptionFragment();
         Bundle args = new Bundle();
         args.putInt(PostDescriptionFragment.POST_ID, postId);
         postDescriptionFragment.setArguments(args);
@@ -72,5 +74,10 @@ public class MainActivity extends AppCompatActivity implements PostListFragment.
         return super.onOptionsItemSelected(item);
     }
 
+    /* open the user profile */
+    public void onUserClicked(View view){
+
+        postDescriptionFragment.onUserClicked(view);
+    }
 
 }

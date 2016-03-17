@@ -5,22 +5,15 @@ package babylon.babylonapp.Model;
  */
 public class Address {
 
-/*          "street": "Kulas Light",
-            "suite": "Apt. 556",
-            "city": "Gwenborough",
-            "zipcode": "92998-3874",
-            "geo": {
-                 "lat": "-37.3159",
-                "lng": "81.1496"
-    }
-    */
-
     String street;
     String suite;
     String city;
     String zipcode;
     Geo geo;
 
+    public Address(){
+        geo = new Geo();
+    }
     public Address(String street, String city, String zipcode, Geo geo){
         this.street = street;
         this.suite  = suite;

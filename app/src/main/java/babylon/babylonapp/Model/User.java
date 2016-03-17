@@ -10,15 +10,9 @@ public class User {
     private String  username;
     private String  email;
     private Address address;
-
-    /* only to database */
-    private String street;
-    private String suite;
-    private String city;
-    private String zipcode;
-    private double lat;
-    private double lng;
-    private String url_avatar;
+    private String phone;
+    private String website;
+    private Company company;
 
     public User(int id, String name, String username, String email, Address address){
         this.id       = id;
@@ -28,7 +22,10 @@ public class User {
         this.address  = address;
     }
 
-    public User() {    }
+    public User() {
+        address = new Address();
+        company = new Company();
+    }
 
     public int getId() {
         return id;
@@ -70,60 +67,29 @@ public class User {
         this.address = address;
     }
 
-    /* only to database */
-    public String getStreet() {
-        return street;
+
+    public String getPhone() {
+        return phone;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getSuite() {
-        return suite;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setSuite(String suite) {
-        this.suite = suite;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public String getCity() {
-        return city;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLng() {
-        return lng;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public String getUrl_avatar() {
-        return url_avatar;
-    }
-
-    public void setUrl_avatar(String url_avatar) {
-        this.url_avatar = url_avatar;
-    }
 }

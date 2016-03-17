@@ -22,21 +22,15 @@ import babylon.babylonapp.App.AppSingleton;
  */
 public class Requests {
 
-    public interface MyRequestArrayCallback{
-        void onResponse(JSONArray jsonArrayResponse);
-        void onError(String error);
-    }
-
     public interface MyRequestCallback{
         void onResponse(Object objectResponse);
         void onError(String error);
     }
 
-    public static void requestArray(Activity activity, String url, String tagToCancel, final Class converTo, final MyRequestCallback myRequestCallback){
+    public static void requestArray(Activity activity, final String url, String tagToCancel, final Class converTo, final MyRequestCallback myRequestCallback){
 
         // tag to log
-        final String TAG = "RequestArray.RequestPostList";
-
+        final String TAG = "RequestArray";
 
         JsonArrayRequest req = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -49,11 +43,12 @@ public class Requests {
                     }
                 }, new Response.ErrorListener() {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
-        }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getCause() + " " + url);
+                        myRequestCallback.onError(Integer.toString(error.hashCode()));
+                    }
+                }
         );
 
         // Adding to the queu

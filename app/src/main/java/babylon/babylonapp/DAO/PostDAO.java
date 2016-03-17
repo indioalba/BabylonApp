@@ -1,6 +1,7 @@
 package babylon.babylonapp.DAO;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public class PostDAO {
 
 
         // Request ONLINE posts
-        String newUrl = URL_POST+"?id="+idPost;
+        final String newUrl = URL_POST+"?id="+idPost;
 
         Requests.requestArray(activity, newUrl, tagToCancel, Post.class, new Requests.MyRequestCallback() {
             @Override
@@ -104,7 +105,7 @@ public class PostDAO {
     }
 
 
-
+    // Method in charge to get the post, the user and the comments assigned to that post and return to the View
     public static void getAllInformationPost(final Activity activity, int idPost, final String tagToCancel,
                                      final CallbackPostUserAndComments fragmentCallback){
 
@@ -112,40 +113,38 @@ public class PostDAO {
         PostDAO.getPostById(activity, idPost, tagToCancel, new Requests.MyRequestCallback() {
             @Override
             public void onResponse(Object objectResponse) {
-                if (objectResponse != null) {
-                    final Post postResponse = (Post) objectResponse;
+                Log.i("GETALLINFORMATIONPOST", "post");
+                final Post postResponse = (Post) objectResponse;
 
-                    // get the USER of the post
-                    UserDAO.getUserById(activity, postResponse.getUserId(), tagToCancel, new Requests.MyRequestCallback() {
-                        @Override
-                        public void onResponse(Object objectResponse) {
-                            // Receive the User
-                            final User user  = (User) objectResponse;
+                // get the USER of the post
+                UserDAO.getUserById(activity, postResponse.getUserId(), tagToCancel, new Requests.MyRequestCallback() {
+                    @Override
+                    public void onResponse(Object objectResponse) {
+                        Log.i("GETALLINFORMATIONPOST", "user");
+                        // Receive the User
+                        final User user  = (User) objectResponse;
 
-
-                            // get the COMMENTS
-                             CommentDAO.getCommentsByPostId(activity, postResponse.getId(), tagToCancel, new Requests.MyRequestCallback() {
-                                @Override
-                                public void onResponse(Object objectResponse) {
-                                    // Receive the Comments
-                                    ArrayList<Comment> alComment = (ArrayList<Comment>) objectResponse;
-                                    //Return the post, the user and the comments associated to this post
-                                    fragmentCallback.onCallbackPostUserAndComments(postResponse, user, alComment);
-                                }
-                                @Override
-                                public void onError(String error) {
-                                    fragmentCallback.onCallbackPostUserAndComments(null, null, null);
-                                }
-                            });
-                            // END COMMENTS
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            fragmentCallback.onCallbackPostUserAndComments(null, null, null);
-                        }
-                    }); // END COMMENTS
-                }
+                        // get the COMMENTS
+                         CommentDAO.getCommentsByPostId(activity, postResponse.getId(), tagToCancel, new Requests.MyRequestCallback() {
+                            @Override
+                            public void onResponse(Object objectResponse) {
+                                Log.i("GETALLINFORMATIONPOST", "comments");
+                                // Receive the Comments
+                                ArrayList<Comment> alComment = (ArrayList<Comment>) objectResponse;
+                                //Return the post, the user and the comments associated to this post
+                                fragmentCallback.onCallbackPostUserAndComments(postResponse, user, alComment);
+                            }
+                            @Override
+                            public void onError(String error) {
+                                fragmentCallback.onError(error);
+                            }
+                        }); // END COMMENTS
+                    }
+                    @Override
+                    public void onError(String error) {
+                        fragmentCallback.onError(error);
+                    }
+                }); // END COMMENTS
             }
             @Override
             public void onError(String error) {

@@ -15,6 +15,7 @@ public class UserDAO {
 
     private static String URL_USERS = "http://jsonplaceholder.typicode.com/users";
 
+
     public static void getUserById(Activity activity, int idUser, String tagToCancel,
                                    final Requests.MyRequestCallback myRequestCallback){
 

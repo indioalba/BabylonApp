@@ -20,6 +20,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.UserProfileActivity"/>
+
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+             />
+
+        <!-- Map Api Key debug  AIzaSyCR5sqat-xqCeorDsZoHZONrY5q3E3Rwt4  -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCR5sqat-xqCeorDsZoHZONrY5q3E3Rwt4"/>
+
+
     </application>
 
 </manifest>

@@ -19,35 +19,41 @@ import babylon.babylonapp.Model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "blog";
+    public static final String DATABASE_NAME = "blog";
 
     // Posts table name
-    private static final String TABLE_POST = "posts";
+    public static final String TABLE_POST = "posts";
 
     // Users Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_USER_ID = "userId";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_BODY = "body";
+    public static final String KEY_ID = "id";
+    public static final String KEY_USER_ID = "userId";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_BODY = "body";
 
     // Users table name
-    private static final String TABLE_USERS = "users";
+    public static final String TABLE_USERS = "users";
 
     // Users Table Columns names
     //private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "name";
-    private static final String KEY_USERNAME = "username";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_ADDRESS = "address";
-    private static final String KEY_STREET = "street";
-    private static final String KEY_SUITE = "suite";
-    private static final String KEY_CITY = "city";
-    private static final String KEY_ZIPCODE = "zipcode";
-    private static final String KEY_LAT = "lat";
-    private static final String KEY_LNG = "lng";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_ADDRESS = "address";
+    public static final String KEY_STREET = "street";
+    public static final String KEY_SUITE = "suite";
+    public static final String KEY_CITY = "city";
+    public static final String KEY_ZIPCODE = "zipcode";
+    public static final String KEY_LAT = "lat";
+    public static final String KEY_LNG = "lng";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_WEBSITE = "website";
+    public static final String KEY_COMPANY_NAME = "company_name";
+    public static final String KEY_COMPANY_CATCH_PHRASE = "catchPhrase";
+    public static final String KEY_COMPANY_BS = "bs";
+
 
     // Comments table name
     private static final String TABLE_COMMENTS = "comments";
@@ -76,7 +82,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + KEY_USERNAME + " TEXT," + KEY_EMAIL + " TEXT,"
                 + KEY_STREET + " TEXT," + KEY_SUITE + " TEXT,"
                 + KEY_CITY + " TEXT," + KEY_ZIPCODE + " INTEGER,"
-                + KEY_LAT + " REAL," + KEY_LNG + " REAL" + ")";
+                + KEY_LAT + " REAL," + KEY_LNG + " REAL,"
+                + KEY_PHONE + " TEXT," + KEY_WEBSITE+" TEXT,"
+                + KEY_COMPANY_NAME + " TEXT,"+ KEY_COMPANY_CATCH_PHRASE+ " TEXT,"
+                + KEY_COMPANY_BS + " TEXT" +")";
+
         db.execSQL(CREATE_USER_TABLE);
 
         String CREATE_COMMENT_TABLE = "CREATE TABLE " + TABLE_COMMENTS + "("
@@ -137,6 +147,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         post.setBody(c.getString(c.getColumnIndex(KEY_BODY)));
         post.setUserId(c.getInt(c.getColumnIndex(KEY_USER_ID)));
 
+        db.close(); // Closing database connection
+
         return post;
     }
 
@@ -162,6 +174,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
 
+        db.close(); // Closing database connection
+
         // return contact list
         return postList;
     }
@@ -169,6 +183,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /***************** USER TABLE ***********************/
     // Adding new USER
         public void addUser(User user) {
+
+        // check if the user is already saved
+        User tempUser = getUser(user.getId());
+        if(tempUser!= null){
+            return;
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -182,6 +203,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_ZIPCODE, user.getAddress().getZipcode());
         values.put(KEY_LAT, user.getAddress().getGeo().getLat());
         values.put(KEY_LNG, user.getAddress().getGeo().getLng());
+        values.put(KEY_PHONE, user.getPhone());
+        values.put(KEY_WEBSITE, user.getWebsite());
+        values.put(KEY_COMPANY_NAME, user.getCompany().getName());
+        values.put(KEY_COMPANY_CATCH_PHRASE, user.getCompany().getCatchPhrase());
+        values.put(KEY_COMPANY_BS, user.getCompany().getBs());
 
         // Inserting Row
         db.insert(TABLE_USERS, null, values);
@@ -207,15 +233,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setName(c.getString(c.getColumnIndex(KEY_NAME)));
             user.setUsername(c.getString(c.getColumnIndex(KEY_USERNAME)));
             user.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
-            user.setStreet(c.getString(c.getColumnIndex(KEY_STREET)));
-            user.setSuite(c.getString(c.getColumnIndex(KEY_SUITE)));
-            user.setCity(c.getString(c.getColumnIndex(KEY_CITY)));
-            user.setZipcode(c.getString(c.getColumnIndex(KEY_ZIPCODE)));
-            user.setLat(c.getDouble(c.getColumnIndex(KEY_LAT)));
-            user.setLng(c.getDouble(c.getColumnIndex(KEY_LNG)));
+            user.getAddress().setStreet(c.getString(c.getColumnIndex(KEY_STREET)));
+            user.getAddress().setSuite(c.getString(c.getColumnIndex(KEY_SUITE)));
+            user.getAddress().setCity(c.getString(c.getColumnIndex(KEY_CITY)));
+            user.getAddress().setZipcode(c.getString(c.getColumnIndex(KEY_ZIPCODE)));
+            user.getAddress().getGeo().setLat(c.getDouble(c.getColumnIndex(KEY_LAT)));
+            user.getAddress().getGeo().setLng(c.getDouble(c.getColumnIndex(KEY_LNG)));
+            user.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+            user.setWebsite(c.getString(c.getColumnIndex(KEY_WEBSITE)));
+            user.getCompany().setName(c.getString(c.getColumnIndex(KEY_COMPANY_NAME)));
+            user.getCompany().setCatchPhrase(c.getString(c.getColumnIndex(KEY_COMPANY_CATCH_PHRASE)));
+            user.getCompany().setBs(c.getString(c.getColumnIndex(KEY_COMPANY_BS)));
         }
 
+        db.close(); // Closing database connection
+
         return user;
+    }
+
+    // Getting single USER email
+    public String getEmailUser(int id) {
+
+        // creating the query
+        String selectQuery = "SELECT " + KEY_EMAIL + " FROM " + TABLE_USERS + " WHERE "
+                + KEY_ID + " = " + id;
+
+        Log.e("DataBaseHelper", selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        String userEmail = null;
+
+        if (c.moveToFirst()) {
+            // getting the values from cursor
+            userEmail = c.getString(c.getColumnIndex(KEY_EMAIL));
+        }
+
+        db.close(); // Closing database connection
+
+        return userEmail;
     }
 
     // Getting All Post
@@ -235,16 +290,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 user.setName(c.getString(c.getColumnIndex(KEY_NAME)));
                 user.setUsername(c.getString(c.getColumnIndex(KEY_USERNAME)));
                 user.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
-                user.setStreet(c.getString(c.getColumnIndex(KEY_STREET)));
-                user.setSuite(c.getString(c.getColumnIndex(KEY_SUITE)));
-                user.setCity(c.getString(c.getColumnIndex(KEY_CITY)));
-                user.setZipcode(c.getString(c.getColumnIndex(KEY_ZIPCODE)));
-                user.setLat(c.getDouble(c.getColumnIndex(KEY_LAT)));
-                user.setLng(c.getDouble(c.getColumnIndex(KEY_LNG)));
+                user.getAddress().setStreet(c.getString(c.getColumnIndex(KEY_STREET)));
+                user.getAddress().setSuite(c.getString(c.getColumnIndex(KEY_SUITE)));
+                user.getAddress().setCity(c.getString(c.getColumnIndex(KEY_CITY)));
+                user.getAddress().setZipcode(c.getString(c.getColumnIndex(KEY_ZIPCODE)));
+                user.getAddress().getGeo().setLat(c.getDouble(c.getColumnIndex(KEY_LAT)));
+                user.getAddress().getGeo().setLng(c.getDouble(c.getColumnIndex(KEY_LNG)));
+                user.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+                user.setWebsite(c.getString(c.getColumnIndex(KEY_WEBSITE)));
+                user.getCompany().setName(c.getString(c.getColumnIndex(KEY_COMPANY_NAME)));
+                user.getCompany().setCatchPhrase(c.getString(c.getColumnIndex(KEY_COMPANY_CATCH_PHRASE)));
+                user.getCompany().setBs(c.getString(c.getColumnIndex(KEY_COMPANY_BS)));
                 // Adding USER to list
                 userList.add(user);
             } while (c.moveToNext());
         }
+
+        db.close(); // Closing database connection
 
         // return user list
         return userList;
@@ -277,6 +339,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
 
+        db.close(); // Closing database connection
         // return comment list
         return commentList;
     }
@@ -332,9 +395,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         comment.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
         comment.setBody(c.getString(c.getColumnIndex(KEY_BODY)));
 
+        db.close(); // Closing database connection
         return comment;
     }
-
-
 
 }

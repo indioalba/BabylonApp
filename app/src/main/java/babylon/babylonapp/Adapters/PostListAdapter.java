@@ -8,20 +8,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.ImageLoader;
 
 import java.util.ArrayList;
 
+import babylon.babylonapp.App.AppSingleton;
 import babylon.babylonapp.Model.Post;
 import babylon.babylonapp.R;
 
 /**
  * Created by manuel on 8/3/16.
  */
-public class PostListAdapter extends ArrayAdapter<Post>{
+public class PostListAdapter extends ArrayAdapter<Post> {
 
     Context context;
     ArrayList<Post> alPost;
+    ImageLoader imageLoader = AppSingleton.getInstance().getImageLoader();
 
     public PostListAdapter(Context context, ArrayList<Post> alPost){
         super(context, 0, alPost);
@@ -38,8 +40,8 @@ public class PostListAdapter extends ArrayAdapter<Post>{
             convertView = inflater.inflate(R.layout.row_post, parent, false);
 
             holder = new HolderView();
-            // holder.ivAvatarRow = (NetworkImageView)convertView.findViewById(R.id.ivAvatarRow);
             holder.tvTitle  = (TextView)convertView.findViewById(R.id.tvTitle);
+
             convertView.setTag(holder);
         }else{
             holder = (HolderView) convertView.getTag();
@@ -52,7 +54,12 @@ public class PostListAdapter extends ArrayAdapter<Post>{
 
     // class to recycle the elements
     static class HolderView{
-        NetworkImageView ivAvatarRow;
         TextView  tvTitle;
     }
+
+    // In case ListView Stop, pending request must be stopped too
+    public void onStop () {
+        AppSingleton.getInstance().cancelPendingRequests("getUserByIdFromAdapter");
+    }
+
 }

@@ -28,5 +28,6 @@ dependencies {
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     // GSON
     compile 'com.google.code.gson:gson:2.3'
-
+    // Google Play Services
+    compile 'com.google.android.gms:play-services:8.4.0'
 }

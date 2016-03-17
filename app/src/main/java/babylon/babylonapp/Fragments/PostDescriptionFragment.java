@@ -1,6 +1,7 @@
 package babylon.babylonapp.Fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 
+import babylon.babylonapp.Activities.UserProfileActivity;
 import babylon.babylonapp.App.AppSingleton;
 import babylon.babylonapp.DAO.PostDAO;
 import babylon.babylonapp.Model.Comment;
@@ -28,7 +30,7 @@ public class PostDescriptionFragment extends Fragment {
     private String postRequestTag = "post_request";         // tag to cancel request
     private ProgressDialog pDialog;                         // progress Dialog
     public final static String POST_ID = "postId";          // String to get the postId selected
-
+    private User user;
     TextView tvTitlePost, tvBodyPost, tvUsernamePost, tvNumComents;
     NetworkImageView ivAvatar;
     //ImageLoader mImageLoader;
@@ -69,27 +71,39 @@ public class PostDescriptionFragment extends Fragment {
                 @Override
                 public void onCallbackPostUserAndComments(Post postResponse, User postUser, ArrayList<Comment> alComments) {
                     pDialog.hide();
-                    // print on screen
-                    if (postResponse != null) {
+                    if (postResponse != null && postUser != null && alComments != null){
+                        // print on screen
+                        // post
                         tvTitlePost.setText(postResponse.getTitle());
                         tvBodyPost.setText(postResponse.getBody());
-                    }
-                    if (postUser != null) {
+                        // users
+                        user = postUser;
                         tvUsernamePost.setText(postUser.getName());
                         ImageLoader imageLoader = AppSingleton.getInstance().getImageLoader();
                         String avatarUrl = "https://api.adorable.io/avatars/120/"+postUser.getEmail();
                         ivAvatar.setImageUrl(avatarUrl, imageLoader);
-                    }
-                    if (alComments != null) {
+                        // comments
                         tvNumComents.setText(alComments.size() + " comments");
+                    }else{
+                        // return to list
+                        getFragmentManager().popBackStack();
                     }
                 }
 
                 @Override
                 public void onError(String error) {
+                    pDialog.hide();
+                    getFragmentManager().popBackStack();
                     /* Do something */
                 }
             });
         }
+    }
+
+    /* open the user profile */
+    public void onUserClicked(View view){
+        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+        intent.putExtra("userId", user.getId());
+        startActivity(intent);
     }
 }

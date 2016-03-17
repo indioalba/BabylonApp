@@ -30,7 +30,7 @@ public class PostListFragment extends Fragment { //Requests.MyRequestArrayCallba
 
     OnPostSelectedInterface onPostSelectedInterface;
     ListView lvPost;
-    ArrayList<Post> alPost;
+    ArrayList<Post> alPost = new ArrayList<Post>();;
     String TAG = "PostListFragment";
     String postListRequestTag = "post_list_request";
     PostListAdapter postListAdapter;
@@ -47,6 +47,10 @@ public class PostListFragment extends Fragment { //Requests.MyRequestArrayCallba
 
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
         lvPost = (ListView)view.findViewById(R.id.lvPosts);
+        postListAdapter = new PostListAdapter(getActivity(), alPost);
+        // Set Adapter to the ListView
+        lvPost.setAdapter(postListAdapter);
+
         lvPost.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,11 +76,11 @@ public class PostListFragment extends Fragment { //Requests.MyRequestArrayCallba
         //
         onPostSelectedInterface = (OnPostSelectedInterface) getActivity();
         // Create the Array List of Post and the Adapter,
-        ArrayList<Post> arrayListPost = new ArrayList<Post>();
-        postListAdapter = new PostListAdapter(getActivity(), arrayListPost);
+       // ArrayList<Post> arrayListPost = new ArrayList<Post>();
+/*        postListAdapter = new PostListAdapter(getActivity(), alPost);
         // Set Adapter to the ListView
         lvPost.setAdapter(postListAdapter);
-
+*/
         pDialog.show();
         // Request posts
         PostDAO.getAllThePost(getActivity(), postListRequestTag, new Requests.MyRequestCallback() {
@@ -84,8 +88,9 @@ public class PostListFragment extends Fragment { //Requests.MyRequestArrayCallba
             // SUCCESS
             public void onResponse(Object objectResponse) {
                 pDialog.dismiss();
-                if(objectResponse != null) {
+                if (objectResponse != null) {
                     alPost = (ArrayList<Post>) objectResponse;
+                    postListAdapter.clear();
                     postListAdapter.addAll(alPost);
                     postListAdapter.notifyDataSetChanged();
                 }
@@ -104,5 +109,11 @@ public class PostListFragment extends Fragment { //Requests.MyRequestArrayCallba
     public void onPause() {
         lvState =lvPost.onSaveInstanceState();
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        postListAdapter.onStop();
     }
 }
