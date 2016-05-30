@@ -30,4 +30,12 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3'
     // Google Play Services
     compile 'com.google.android.gms:play-services:8.4.0'
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // RecycleView
+    //compile 'com.android.support:recyclerview-v7:23.2.0'
+    // CardView
+    compile 'com.android.support:cardview-v7:23.2.0'
+
+
 }
